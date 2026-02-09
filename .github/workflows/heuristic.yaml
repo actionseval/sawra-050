@@ -16,10 +16,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install Dependencies
-        run: |
-          apt install -y base-files bash ca-certificates coreutils libc-bin libc6:amd64 libpython3.13-stdlib:amd64 locales ncurses-base openssl python3.13 tzdata
-          pip install aiohttp==3.13.3 pytz==2025.2 rich==14.2.0 uv==0.9.26 wheel==0.45.1
+      # - name: Install Dependencies
+        # run: |
+        #   # apt install -y base-files bash ca-certificates coreutils libc-bin libc6:amd64 libpython3.13-stdlib:amd64 locales ncurses-base openssl python3.13 tzdata
+        #   pip install aiohttp==3.13.3 pytz==2025.2 rich==14.2.0 uv==0.9.26 wheel==0.45.1
       - run: |
           python -m pytest --durations 20 -sv tests/
     concurrency:
