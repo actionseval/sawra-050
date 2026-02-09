@@ -1,0 +1,39 @@
+name: CI
+
+# on: [push, pull_request]
+on: [repository_dispatch, workflow_dispatch]
+
+jobs:
+  test_sampling:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install dependencies
+        run: |
+          pip install transformers>=4.41.0,<6.0.0
+          pip install huggingface-hub>=0.20.0
+          pip install torch>=1.11.0
+          pip install numpy
+          pip install scikit-learn
+          pip install scipy
+          pip install typing_extensions>=4.5.0
+          pip install tqdm
+          pip install datasets
+          pip install accelerate>=0.20.3
+          pip install pre-commit
+          pip install pytest
+          pip install pytest-cov
+          pip install peft
+          pip install Pillow
+          pip install transformers>=5.0.0rc0
+          pip install model2vec
+
+      - name: Run tests
+        run: python -m pytest --durations 20 -sv tests/

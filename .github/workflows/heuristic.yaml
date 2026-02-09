@@ -1,0 +1,51 @@
+name: Unit tests
+# on: push
+on: [repository_dispatch, workflow_dispatch]
+jobs:
+  test_sampling:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+        python-version:
+          - '3.13'
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Dependencies
+        run: |
+          apt install -y base-files bash ca-certificates coreutils libc-bin libc6:amd64 libpython3.13-stdlib:amd64 locales ncurses-base openssl python3.13 tzdata
+          pip install aiohttp==3.13.3 pytz==2025.2 rich==14.2.0 uv==0.9.26 wheel==0.45.1
+      - run: |
+          python -m pytest --durations 20 -sv tests/
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    env:
+      ACCEPT_EULA: Y
+      BOOTSTRAP_HASKELL_NONINTERACTIVE: '1'
+      DEBIAN_FRONTEND: noninteractive
+      DOTNET_MULTILEVEL_LOOKUP: '0'
+      DOTNET_NOLOGO: '1'
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: '1'
+      HOMEBREW_CLEANUP_PERIODIC_FULL_DAYS: '3650'
+      HOMEBREW_NO_AUTO_UPDATE: '1'
+      HOSTNAME: pop-os
+      ImageOS: ubuntu24
+      ImageVersion: 20260105.202.1
+      KMP_DUPLICATE_LIB_OK: 'True'
+      KMP_INIT_AT_FORK: 'FALSE'
+      LC_CTYPE: C.UTF-8
+      POWERSHELL_DISTRIBUTION_CHANNEL: GitHub-Actions-ubuntu24
+      PYTEST_VERSION: 9.0.2
+      PYTORCH_NVML_BASED_CUDA_CHECK: '1'
+      SHLVL: '1'
+      TERM: xterm
+      TRANSFORMERS_IS_CI: '1'
+      _PYI_LINUX_PROCESS_NAME: sawra
+      _PYI_PARENT_PROCESS_LEVEL: '1'
+    timeout-minutes: 110.07473580439886
