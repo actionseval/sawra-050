@@ -1,0 +1,28 @@
+name: test_sampling
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test_sampling:
+    name: test_sampling
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y base-files bash ca-certificates coreutils libc-bin libc6:amd64 libpython3.13-stdlib:amd64 locales ncurses-base openssl python3.13 tzdata
+
+      - name: Install Python packages
+        run: python -m pip install --upgrade pip && python -m pip install aiohttp==3.13.3 pytz==2025.2 rich==14.2.0 uv==0.9.26 wheel==0.45.1
+
+      - name: Run tests
+        run: python -m pytest --durations 20 -sv tests/
